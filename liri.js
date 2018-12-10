@@ -50,4 +50,23 @@ function concertThis(artist) {
     })
 }
 
-concertThis("john");
+//testing
+// concertThis("john");
+//
+
+
+function spotifyThisSong(song) {
+
+
+    spotify.search({type: "track", query: song, limit: 1}).then(function(response) {        
+        
+        // console.log(response.tracks.items[0]);
+
+        console.log("Artist(s): " + response.tracks.items[0].artists[0].name + 
+                    "\nSong: " + response.tracks.items[0].name +
+                    "\nPreview: " + response.tracks.items[0].preview_url + // look into making clickable link
+                    "\nAlbum: " + response.tracks.items[0].album.name) 
+    })
+}
+
+spotifyThisSong("Edge of Desire")
