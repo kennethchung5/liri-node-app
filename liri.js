@@ -11,7 +11,20 @@ var moment = require("moment");
 
 
 
-//here, construct parameter from arguments after [2]
+// toDo: from CLI or random.txt, parse the (final) command and the search term. 
+
+if (process.argv[2].toLowerCase() === "do-what-it-says") {
+    fs.readFile("random.txt", "utf8", function(error, data) {
+        if (error) {
+            return console.log(error);
+        }
+
+        console.log(data);
+    })
+}
+
+
+// toDo: replace process.argv[2] in below switch
 
 switch (process.argv[2].toLowerCase()) {
     case "concert-this": 
@@ -23,9 +36,10 @@ switch (process.argv[2].toLowerCase()) {
     case "movie-this": 
         console.log("option3");
         break;
-    case "do-what-it-says":
-        console.log("option4");
-        break;
+//handle this case separately
+    // case "do-what-it-says":
+    //     console.log("option4");
+    //     break;
     default:
         console.log("that command is not recognized")
     
@@ -50,10 +64,6 @@ function concertThis(artist) {
     })
 }
 
-//testing
-// concertThis("john");
-// spotifyThisSong("Edge of Desire")
-// movieThis("Whiplash")
 
 
 function spotifyThisSong(song) {
@@ -88,3 +98,9 @@ function movieThis(movie) {
     })
 }
 
+
+
+//testing
+// concertThis("john");
+// spotifyThisSong("Edge of Desire")
+// movieThis("Whiplash")
