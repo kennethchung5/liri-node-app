@@ -53,7 +53,7 @@ function concertThis(artist) {
 //testing
 // concertThis("john");
 // spotifyThisSong("Edge of Desire")
-//
+// movieThis("Whiplash")
 
 
 function spotifyThisSong(song) {
@@ -76,10 +76,15 @@ function movieThis(movie) {
     var url = "http://www.omdbapi.com/?apikey=trilogy&type=movie&t=" + movie
 
     axios.get(url).then(function(response) {
-        console.log(response.data)
-        // console.log(response.data.Search[0]);
-
+        
+        console.log("Title: " + response.data.Title + 
+                    "\nYear: " + response.data.Year + 
+                    "\nIMDB Rating: " + response.data.imdbRating + 
+                    "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value + 
+                    "\nCountry: " + response.data.Country + 
+                    "\nLanguage: " + response.data.Language + 
+                    "\nPlot: " + response.data.Plot + 
+                    "\nActors: " + response.data.Actors);
     })
 }
 
-movieThis("Whiplash")
