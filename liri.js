@@ -11,7 +11,9 @@ var moment = require("moment");
 
 
 
-// toDo: from CLI or random.txt, parse the (final) command and the search term. 
+
+var command;
+var queryTerm;
 
 if (process.argv[2].toLowerCase() === "do-what-it-says") {
     fs.readFile("random.txt", "utf8", function(error, data) {
@@ -19,31 +21,43 @@ if (process.argv[2].toLowerCase() === "do-what-it-says") {
             return console.log(error);
         }
 
-        console.log(data);
+        // account for extra commas (commas in the artist/song/movie name)
+        var argsArray = data.split(",");
+
+        command = argsArray[0];
+        queryTerm = argsArray.slice(1).join(",").replace(/"/g, "");
+
+        // call switchBoard here so that command is not evaluated until its value is assigned
+        switchBoard();        
     })
-}
+} else {
+    command = process.argv[2].toLowerCase();
+    queryTerm = process.argv.slice(3).join(" ");
+
+    switchBoard();
+};
 
 
-// toDo: replace process.argv[2] in below switch
 
-switch (process.argv[2].toLowerCase()) {
-    case "concert-this": 
-        console.log("option1");
-        break;
-    case "spotify-this-song":
-        console.log("option2");
-        break;
-    case "movie-this": 
-        console.log("option3");
-        break;
-//handle this case separately
-    // case "do-what-it-says":
-    //     console.log("option4");
-    //     break;
-    default:
-        console.log("that command is not recognized")
-    
-}
+
+// wrap the switch statement in a function so that it will not be executed until after random.txt has been read, if needed
+function switchBoard() {
+    console.log("The value of command is: " + command);
+
+    switch (command) {
+        case "concert-this": 
+            console.log("option1");
+            break;
+        case "spotify-this-song":
+            console.log("option2");
+            break;
+        case "movie-this": 
+            console.log("option3");
+            break;
+        default:
+            console.log("that command is not recognized")        
+    };
+};
 
 
 function concertThis(artist) {
@@ -101,6 +115,6 @@ function movieThis(movie) {
 
 
 //testing
-// concertThis("john");
+// concertThis("Backstreet Boys");
 // spotifyThisSong("Edge of Desire")
-// movieThis("Whiplash")
+// movieThis("Batman Begins")
