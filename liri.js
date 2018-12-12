@@ -1,3 +1,5 @@
+//still to do: 1.add default queries 2. output log.txt
+
 require("dotenv").config();
 
 var keys = require("./keys");
@@ -46,13 +48,16 @@ function switchBoard() {
 
     switch (command) {
         case "concert-this": 
-            console.log("option1");
+            // console.log("option1");
+            concertThis(queryTerm);
             break;
         case "spotify-this-song":
-            console.log("option2");
+            // console.log("option2");
+            spotifyThisSong(queryTerm);
             break;
         case "movie-this": 
-            console.log("option3");
+            // console.log("option3");
+            movieThis(queryTerm);
             break;
         default:
             console.log("that command is not recognized")        
