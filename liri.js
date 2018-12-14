@@ -67,19 +67,30 @@ function switchBoard() {
 
 function concertThis(artist) {
 
+    if (!artist) {
+        console.log("The artist will be assigned.");
+        artist = "Marian Hill";
+        console.log("Artist: " + artist);
+    };
+
     var url = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
     
     axios.get(url).then(function(response) {
-        // console.log(response.data);
+
+        if (response.data === '{warn=Not found}\n') {
+            console.log("That artist was not found.");
+        } else {
         
-        var eventsArray = response.data
+            var eventsArray = response.data
 
-        for (var i=0; i<eventsArray.length; i++) {
-            console.log("Venue: " + eventsArray[i].venue.name + 
-                        "\nLocation: " + eventsArray[i].venue.city + ", " + eventsArray[i].venue.country + 
-                        "\nDate: " + moment(eventsArray[i].datetime).format("MM/DD/YYYY"))
+            for (var i=0; i<eventsArray.length; i++) {
+                console.log("Venue: " + eventsArray[i].venue.name + 
+                            "\nLocation: " + eventsArray[i].venue.city + ", " + eventsArray[i].venue.country + 
+                            "\nDate: " + moment(eventsArray[i].datetime).format("MM/DD/YYYY") + 
+                            "\n-----");
+            };
+
         };
-
     })
 }
 
@@ -87,24 +98,48 @@ function concertThis(artist) {
 
 function spotifyThisSong(song) {
 
-
-    spotify.search({type: "track", query: song, limit: 1}).then(function(response) {        
+        if (!song) {
+            console.log("The song will be assigned.");
+            song = "The Sign Ace of Base";
+        };
         
-        // console.log(response.tracks.items[0]);
+        spotify.search({type: "track", query: song, limit: 1}).then(function(response) {        
+            
+            if (response.tracks.items.length === 0) {
+                console.log("That song was not found.")
+            } else {
+            // console.log(response.tracks.items[0]);
 
-        console.log("Artist(s): " + response.tracks.items[0].artists[0].name + 
-                    "\nSong: " + response.tracks.items[0].name +
-                    "\nPreview: " + response.tracks.items[0].preview_url + // look into making clickable link
-                    "\nAlbum: " + response.tracks.items[0].album.name) 
-    })
+            console.log("Artist(s): " + response.tracks.items[0].artists[0].name + 
+                        "\nSong: " + response.tracks.items[0].name +
+                        "\nPreview: " + response.tracks.items[0].preview_url + // look into making clickable link
+                        "\nAlbum: " + response.tracks.items[0].album.name) 
+
+            };
+        })
+    
+        
+        
+    
 }
 
 
 
 function movieThis(movie) {
+
+    if (!movie) {
+        console.log("The movie will be assigned.");
+        movie = "Mr. Nobody";
+    };
+
     var url = "http://www.omdbapi.com/?apikey=trilogy&type=movie&t=" + movie
 
     axios.get(url).then(function(response) {
+
+        if (response.data.Error) {
+            console.log(response.data.Error);
+        } else {        
+        // console.log(response.data);
         
         console.log("Title: " + response.data.Title + 
                     "\nYear: " + response.data.Year + 
@@ -114,12 +149,9 @@ function movieThis(movie) {
                     "\nLanguage: " + response.data.Language + 
                     "\nPlot: " + response.data.Plot + 
                     "\nActors: " + response.data.Actors);
+
+        }
     })
 }
 
 
-
-//testing
-// concertThis("Backstreet Boys");
-// spotifyThisSong("Edge of Desire")
-// movieThis("Batman Begins")
