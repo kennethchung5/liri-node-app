@@ -26,7 +26,7 @@ if (process.argv[2].toLowerCase() === "do-what-it-says") {
         // account for extra commas (commas in the artist/song/movie name)
         var argsArray = data.split(",");
 
-        command = argsArray[0];
+        command = argsArray[0].toLowerCase();
         queryTerm = argsArray.slice(1).join(",").replace(/"/g, "");
 
         // call switchBoard here so that command is not evaluated until its value is assigned
@@ -44,7 +44,7 @@ if (process.argv[2].toLowerCase() === "do-what-it-says") {
 
 // wrap the switch statement in a function so that it will not be executed until after random.txt has been read, if needed
 function switchBoard() {
-    console.log("The value of command is: " + command);
+    // console.log("The value of command is: " + command);
 
     switch (command) {
         case "concert-this": 
@@ -60,7 +60,7 @@ function switchBoard() {
             movieThis(queryTerm);
             break;
         default:
-            console.log("that command is not recognized")        
+            console.log("That command is not recognized")        
     };
 };
 
@@ -83,13 +83,16 @@ function concertThis(artist) {
         
             var eventsArray = response.data
 
+            var concertData = "";
+
             for (var i=0; i<eventsArray.length; i++) {
-                console.log("Venue: " + eventsArray[i].venue.name + 
-                            "\nLocation: " + eventsArray[i].venue.city + ", " + eventsArray[i].venue.country + 
-                            "\nDate: " + moment(eventsArray[i].datetime).format("MM/DD/YYYY") + 
-                            "\n-----");
+                concertData +=  "\r\nVenue: " + eventsArray[i].venue.name + 
+                                "\r\nLocation: " + eventsArray[i].venue.city + ", " + eventsArray[i].venue.country + 
+                                "\r\nDate: " + moment(eventsArray[i].datetime).format("MM/DD/YYYY") + 
+                                "\r\n-----";
             };
 
+            logInfo(command + " " + artist, concertData);
         };
     })
 }
@@ -108,19 +111,17 @@ function spotifyThisSong(song) {
             if (response.tracks.items.length === 0) {
                 console.log("That song was not found.")
             } else {
-            // console.log(response.tracks.items[0]);
 
-            console.log("Artist(s): " + response.tracks.items[0].artists[0].name + 
-                        "\nSong: " + response.tracks.items[0].name +
-                        "\nPreview: " + response.tracks.items[0].preview_url + // look into making clickable link
-                        "\nAlbum: " + response.tracks.items[0].album.name) 
+            var songData; 
+            songData =   "Artist(s): " + response.tracks.items[0].artists[0].name + 
+                            "\r\nSong: " + response.tracks.items[0].name +
+                            "\r\nPreview: " + response.tracks.items[0].preview_url +
+                            "\r\nAlbum: " + response.tracks.items[0].album.name
+
+            logInfo(command + " " + song, songData);
 
             };
-        })
-    
-        
-        
-    
+        })        
 }
 
 
@@ -138,20 +139,33 @@ function movieThis(movie) {
 
         if (response.data.Error) {
             console.log(response.data.Error);
-        } else {        
-        // console.log(response.data);
+        } else {                
         
-        console.log("Title: " + response.data.Title + 
-                    "\nYear: " + response.data.Year + 
-                    "\nIMDB Rating: " + response.data.imdbRating + 
-                    "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value + 
-                    "\nCountry: " + response.data.Country + 
-                    "\nLanguage: " + response.data.Language + 
-                    "\nPlot: " + response.data.Plot + 
-                    "\nActors: " + response.data.Actors);
+        var movieData;
+
+        movieData = "Title: " + response.data.Title + 
+                    "\r\nYear: " + response.data.Year + 
+                    "\r\nIMDB Rating: " + response.data.imdbRating + 
+                    "\r\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value + 
+                    "\r\nCountry: " + response.data.Country + 
+                    "\r\nLanguage: " + response.data.Language + 
+                    "\r\nPlot: " + response.data.Plot + 
+                    "\r\nActors: " + response.data.Actors;
+
+        logInfo(command + " " + movie, movieData);
 
         }
     })
 }
 
 
+
+function logInfo(commandInfo, responseInfo) {
+    console.log(responseInfo);
+
+    fs.appendFile("log.txt", commandInfo + "\r\n" + responseInfo + "\r\n----------\r\n", function(error) {
+        if (error) {
+            console.log(error);
+        }
+    })
+};
