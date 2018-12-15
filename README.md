@@ -1,3 +1,3 @@
 # liri-node-app
 
-![test text](/screenshots/test.png)
+![test text](screenshots/test.png)
